@@ -22,9 +22,8 @@
   </ion-grid>
   <ion-card >
     <ion-card-content *ngIf="resultMessage">
-      <h1 text-center> {{ resultMessage }}</h1>
+      <h1 text-center> {{ resultMessage | uppercase }}</h1>
     </ion-card-content>
   </ion-card>
-  <h1 text-center> {{ cards.length }}</h1>
 
 </ion-content>

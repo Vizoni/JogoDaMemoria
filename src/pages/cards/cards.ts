@@ -28,32 +28,52 @@ export class CardsPage {
   
   }
 
+  ionViewDidLoad() {
+    let arrayWithValues = this.generateCardsValue(this.navParams.get('quantityOfCards'));
+    this.cards = this.shuffleCards(this.generateCardsId(arrayWithValues)); // generate cards and shuffle
+  }
+
   pickCard(card: Card): void {
-    if (!this.pickedFirstCard) { // flag pra ver se já escolheu os cards
+    if (!this.pickedFirstCard && !card.getDisplay()) { // flag pra ver se já escolheu os cards
       this.firstCard = card;
       this.pickedFirstCard = true;
       this.displayCardValue(this.firstCard);
-    } else {
+    } else if (!card.getDisplay()) {
       this.secondCard = card;
       this.displayCardValue(this.secondCard);
       let result = this.checkIfMatches(this.firstCard,this.secondCard);
       if (!result) {
-        this.resultMessage = "Tente novamente!";
+        this.hideCards();
+        this.resetPickedCards();  // depois que esconde, próxima escolha de cartas
       } else {
-        this.hideCardsMatched();
-        this.resultMessage = "Achou um par!";
+        this.resetPickedCards(); // acertou, não esconde as cartas acertadas mas reseta
+        this.resultMessage = "Parabéns!";
+        setTimeout(() => {
+          this.resultMessage = null;
+        },1000);
       }
-      this.resetPickedCards();
       
     }
-    
+
   }
 
-  private generateCards(quantity): void {      
-    for (var i = 1; i <= quantity; i++) {
-      let newCard = new Card(this.randomizeValue());
-      this.baseCards.push(newCard);
-    }        
+  private generateCardsValue(quantity): number[] {
+    let arrayOfValues: number[] = [];
+    for (var i = 1; i <= quantity/2; i++) {
+      arrayOfValues.push(this.randomizeValue());
+    }   
+    return arrayOfValues.concat(arrayOfValues);    
+  }
+
+  private generateCardsId(arrayWithValuesGenerated: number[]): Card[] {
+    var arrayDeCartas: Card[] = [];
+    arrayWithValuesGenerated.forEach(singleValue => {
+      arrayDeCartas.push(new Card(singleValue));
+    })
+      for (var i = 0; i < arrayDeCartas.length; i++) {
+      arrayDeCartas[i].setId(this.randomizeValue());
+    }    
+    return arrayDeCartas;    
   }
 
   private setPairForEachCard(cardsWithoutPair: Card[]): Card[] {
@@ -91,23 +111,19 @@ export class CardsPage {
       return cardsArray;
   }
 
-  private hideCardsMatched(): void {
-    this.firstCard.setDisplay(false);
-    this.secondCard.setDisplay(false);
+  private hideCards(): void {
+    setTimeout(() => {
+      this.firstCard.setDisplay(false);
+      this.secondCard.setDisplay(false);
+    }, 1000);
   }
 
   private resetPickedCards(): void {
-    this.firstCard = null;
-    this.secondCard = null;
-    this.pickedFirstCard = false;
+    setTimeout(() => {
+      this.firstCard = null;
+      this.secondCard = null;
+      this.pickedFirstCard = false;
+    }, 1000);
   }
-  
-  ionViewDidLoad() {
-    this.generateCards(this.navParams.get('quantity')/2);
-    this.cards = this.setPairForEachCard(this.baseCards);
-    // debugger;
-  }
-
-
     
 }

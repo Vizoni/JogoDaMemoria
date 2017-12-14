@@ -20,7 +20,7 @@ export class HomePage {
     
     // this.navCtrl.push(CardsPage);
     this.navCtrl.push(CardsPage, {
-      quantity: qnt
+      quantityOfCards: qnt
     });
   }
 }
