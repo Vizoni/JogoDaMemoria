@@ -1,0 +1,30 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Cards</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding class="grey-bg">
+  
+  <ion-grid>
+    <ion-row>
+      <ion-col col-4 *ngFor="let card of cards">
+        <ion-card class="cardBordRadius" (click)="pickCard(card)">
+          <ion-card-content class="myCard">
+            <span *ngIf="card.display"> {{ card.value }} </span>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-card >
+    <ion-card-content *ngIf="resultMessage">
+      <h1 text-center> {{ resultMessage }}</h1>
+    </ion-card-content>
+  </ion-card>
+  <h1 text-center> {{ cards.length }}</h1>
+
+</ion-content>

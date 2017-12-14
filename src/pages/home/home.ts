@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NavController } from 'ionic-angular';
+
+import { CardsPage } from './../cards/cards';
 
 @Component({
   selector: 'page-home',
@@ -7,8 +9,18 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
 
+  @Input() cardsQuantity: number[] = [4,6,8,10,12];
+
   constructor(public navCtrl: NavController) {
 
   }
 
+  setCardQuantity(qnt: number): void {
+    console.log('qnt:',qnt);
+    
+    // this.navCtrl.push(CardsPage);
+    this.navCtrl.push(CardsPage, {
+      quantity: qnt
+    });
+  }
 }

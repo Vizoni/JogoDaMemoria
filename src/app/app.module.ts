@@ -4,11 +4,13 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
+import { CardsPage } from './../pages/cards/cards';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 
 @NgModule({
   declarations: [
+    CardsPage,
     MyApp,
     HomePage
   ],
@@ -18,6 +20,7 @@ import { HomePage } from '../pages/home/home';
   ],
   bootstrap: [IonicApp],
   entryComponents: [
+    CardsPage,
     MyApp,
     HomePage
   ],
