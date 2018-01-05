@@ -13,12 +13,10 @@ export class CardsPage {
   
   cards: Card[] = this.setPairForEachCard(this.baseCards);  // com os pares
   
-  numeroGrid: number;
-
   pickedFirstCard: boolean = false;
   firstCard: Card;
   secondCard: Card;
-  resultMessage: string;
+  errorCounter: number = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -29,32 +27,39 @@ export class CardsPage {
   }
 
   ionViewDidLoad() {
-    let arrayWithValues = this.generateCardsValue(this.navParams.get('quantityOfCards'));
-    this.cards = this.shuffleCards(this.generateCardsId(arrayWithValues)); // generate cards and shuffle
+    this.buildDeck();
   }
 
   pickCard(card: Card): void {
-    if (!this.pickedFirstCard && !card.getDisplay()) { // flag pra ver se já escolheu os cards
-      this.firstCard = card;
-      this.pickedFirstCard = true;
-      this.displayCardValue(this.firstCard);
-    } else if (!card.getDisplay()) {
-      this.secondCard = card;
-      this.displayCardValue(this.secondCard);
-      let result = this.checkIfMatches(this.firstCard,this.secondCard);
-      if (!result) {
-        this.hideCards();
-        this.resetPickedCards();  // depois que esconde, próxima escolha de cartas
-      } else {
-        this.resetPickedCards(); // acertou, não esconde as cartas acertadas mas reseta
-        this.resultMessage = "Parabéns!";
-        setTimeout(() => {
-          this.resultMessage = null;
-        },1000);
+    if (!this.secondCard) {
+      
+      if (!this.pickedFirstCard && !card.getDisplay()) { // flag pra ver se já escolheu os cards
+        this.firstCard = card;
+        this.pickedFirstCard = true;
+        this.displayCardValue(this.firstCard);
+      } else if (!card.getDisplay()) {
+        this.secondCard = card;
+        this.displayCardValue(this.secondCard);
+        let result = this.checkIfMatches(this.firstCard,this.secondCard);
+
+        if (!result) {  // não são pares
+          this.hideCards();
+          this.resetPickedCards();  // depois que esconde, próxima escolha de cartas
+          this.errorCounter = this.errorCounter + 1;
+        } else {  // são pares
+          this.resetPickedCards(); // acertou, não esconde as cartas acertadas mas reseta
+        }
       }
       
     }
 
+  }
+
+  buildDeck(): void {
+    this.errorCounter = 0; // reinicia o contador de errors
+    let quantityOfCards = this.navParams.get('quantityOfCards');  // get quantity of cards user wanna play
+    let arrayWithValues = this.generateCardsValue(quantityOfCards); //  generate cards value
+    this.cards = this.shuffleCards(this.generateCardsId(arrayWithValues)); // generate cards and shuffle
   }
 
   private generateCardsValue(quantity): number[] {
@@ -123,7 +128,7 @@ export class CardsPage {
       this.firstCard = null;
       this.secondCard = null;
       this.pickedFirstCard = false;
-    }, 1000);
+    }, 1100);
   }
     
 }

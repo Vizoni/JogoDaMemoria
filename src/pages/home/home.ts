@@ -9,16 +9,11 @@ import { CardsPage } from './../cards/cards';
 })
 export class HomePage {
 
-  @Input() cardsQuantity: number[] = [4,6,8,10,12];
+  @Input() cardsQuantity: number[] = [12,20,30];
 
-  constructor(public navCtrl: NavController) {
-
-  }
+  constructor(public navCtrl: NavController) {}
 
   setCardQuantity(qnt: number): void {
-    console.log('qnt:',qnt);
-    
-    // this.navCtrl.push(CardsPage);
     this.navCtrl.push(CardsPage, {
       quantityOfCards: qnt
     });

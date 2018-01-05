@@ -1,7 +1,10 @@
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Cards</ion-title>
+  <ion-navbar color="azul-piscina">
+    <div class="item row" style="color: #fff">
+        <span align="left" class="page-title col col-50">{{cards.length}} cartas</span>
+        <span align="right" class="error-counter col col-50">ERROS: {{errorCounter}}</span>
+     </div>
   </ion-navbar>
 
 </ion-header>
@@ -9,21 +12,53 @@
 
 <ion-content padding class="grey-bg">
   
+  <button ion-button block (click)="buildDeck()" class="restart-button">
+    <ion-icon name="md-refresh" item-right></ion-icon>
+      <span style="margin-left: 10px">Reiniciar</span>
+  </button>
+
   <ion-grid>
-    <ion-row>
-      <ion-col col-4 *ngFor="let card of cards">
+        
+    <ion-row *ngIf="cards.length == 12">
+      <ion-col col-4 *ngFor="let card of cards" style="padding: 0px !important">
         <ion-card class="cardBordRadius" (click)="pickCard(card)">
-          <ion-card-content class="myCard">
+          <ion-card-content class="myCard"
+            [ngClass]="{
+              'total-12-cards': cards.length == 12,
+              'pickedCard': card.display == true
+            }">
             <span *ngIf="card.display"> {{ card.value }} </span>
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
+
+    <ion-row *ngIf="cards.length == 20">
+      <ion-col col-3 *ngFor="let card of cards" style="padding: 0px !important">
+        <ion-card class="cardBordRadius" (click)="pickCard(card)">
+          <ion-card-content class="myCard"
+            [ngClass]="{
+              'total-20-cards': cards.length == 20
+            }">
+            <span *ngIf="card.display"> {{ card.value }} </span>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="cards.length == 30">
+      <ion-col col-2 *ngFor="let card of cards" style="padding: 0px !important">
+        <ion-card class="cardBordRadius" (click)="pickCard(card)">
+          <ion-card-content class="myCard"
+            [ngClass]="{
+              'total-30-cards': cards.length == 30
+            }">
+            <span *ngIf="card.display"> {{ card.value }} </span>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
   </ion-grid>
-  <ion-card >
-    <ion-card-content *ngIf="resultMessage">
-      <h1 text-center> {{ resultMessage | uppercase }}</h1>
-    </ion-card-content>
-  </ion-card>
 
 </ion-content>
