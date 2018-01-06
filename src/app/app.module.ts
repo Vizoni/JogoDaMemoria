@@ -10,6 +10,7 @@ import { File } from '@ionic-native/file';
 import { FilePath } from '@ionic-native/file-path';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { CameraService } from '../providers/camera/camera';
 
 @NgModule({
   declarations: [
@@ -29,11 +30,12 @@ import { HomePage } from '../pages/home/home';
   ],
   providers: [
     Camera,
+    CameraService,
     File,
     FilePath,
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })
 export class AppModule {}
