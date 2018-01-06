@@ -5,12 +5,14 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { Camera } from '@ionic-native/camera';
+import { CameraService } from '../providers/camera/camera';
 import { CardsPage } from './../pages/cards/cards';
 import { File } from '@ionic-native/file';
 import { FilePath } from '@ionic-native/file-path';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import { CameraService } from '../providers/camera/camera';
+
+import { ImagePicker } from '@ionic-native/image-picker';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { CameraService } from '../providers/camera/camera';
     CameraService,
     File,
     FilePath,
+    ImagePicker,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
