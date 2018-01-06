@@ -38,7 +38,8 @@
         <ion-card class="cardBordRadius" (click)="pickCard(card)">
           <ion-card-content class="myCard"
             [ngClass]="{
-              'total-20-cards': cards.length == 20
+              'total-20-cards': cards.length == 20,
+              'pickedCard': card.display == true
             }">
             <span *ngIf="card.display"> {{ card.value }} </span>
           </ion-card-content>
@@ -51,7 +52,8 @@
         <ion-card class="cardBordRadius" (click)="pickCard(card)">
           <ion-card-content class="myCard"
             [ngClass]="{
-              'total-30-cards': cards.length == 30
+              'total-30-cards': cards.length == 30,
+              'pickedCard': card.display == true
             }">
             <span *ngIf="card.display"> {{ card.value }} </span>
           </ion-card-content>
