@@ -1,7 +1,9 @@
+import { AlertService } from './../../providers/alert/alert';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 import { Card } from '../../models/Card';
+import { DeckService } from './../../providers/deck/deck';
 
 @Component({
   selector: 'page-cards',
@@ -11,14 +13,17 @@ export class CardsPage {
 
   baseCards: Card[] = []; // sem os pares
   
-  cards: Card[] = this.setPairForEachCard(this.baseCards);  // com os pares
+  cards: Card[] = this.deckService.setPairForEachCard(this.baseCards);  // com os pares
   
   pickedFirstCard: boolean = false;
   firstCard: Card;
   secondCard: Card;
   errorCounter: number = 0;
+  flagDeckWithPhotos: boolean = false;
 
   constructor(
+    public alertService: AlertService,
+    public deckService: DeckService,
     public navCtrl: NavController,
     public navParams: NavParams
     ) 
@@ -27,7 +32,12 @@ export class CardsPage {
   }
 
   ionViewDidLoad() {
-    this.buildDeck();
+    if (this.navParams.get('photos')) { // se tiver escolhido as fotos
+      this.flagDeckWithPhotos = true;
+      this.buildDeckWithPhotos(this.navParams.get('photos'))
+    } else {
+      this.buildDeckWithoutPhotos();
+    }
   }
 
   pickCard(card: Card): void {
@@ -36,11 +46,11 @@ export class CardsPage {
       if (!this.pickedFirstCard && !card.getDisplay()) { // flag pra ver se já escolheu os cards
         this.firstCard = card;
         this.pickedFirstCard = true;
-        this.displayCardValue(this.firstCard);
+        this.deckService.displayCardValue(this.firstCard);
       } else if (!card.getDisplay()) {
         this.secondCard = card;
-        this.displayCardValue(this.secondCard);
-        let result = this.checkIfMatches(this.firstCard,this.secondCard);
+        this.deckService.displayCardValue(this.secondCard);
+        let result = this.deckService.checkIfMatches(this.firstCard,this.secondCard);
 
         if (!result) {  // não são pares
           this.hideCards();
@@ -48,6 +58,9 @@ export class CardsPage {
           this.errorCounter = this.errorCounter + 1;
         } else {  // são pares
           this.resetPickedCards(); // acertou, não esconde as cartas acertadas mas reseta
+          if (this.deckService.checkGameEnded(this.cards)) {
+            this.alertService.basicAlert('Fim de jogo!', 'Você acertou todas as cartas! Clique em reiniciar para começar uma nova partida.');
+          }
         }
       }
       
@@ -55,75 +68,37 @@ export class CardsPage {
 
   }
 
-  buildDeck(): void {
+  buildDeckWithoutPhotos(): void {
     this.errorCounter = 0; // reinicia o contador de errors
     let quantityOfCards = this.navParams.get('quantityOfCards');  // get quantity of cards user wanna play
-    let arrayWithValues = this.generateCardsValue(quantityOfCards); //  generate cards value
-    this.cards = this.shuffleCards(this.generateCardsId(arrayWithValues)); // generate cards and shuffle
+    let arrayWithValues = this.deckService.generateCardsValue(quantityOfCards); //  generate cards value
+    this.cards = this.deckService.shuffleCards(this.deckService.generateCardsId(arrayWithValues)); // generate cards and shuffle
   }
 
-  private generateCardsValue(quantity): number[] {
-    let arrayOfValues: number[] = [];
-    for (var i = 1; i <= quantity/2; i++) {
-      arrayOfValues.push(this.randomizeValue());
-    }   
-    return arrayOfValues.concat(arrayOfValues);    
+  buildDeckWithPhotos(photos: string[]): void {
+    this.errorCounter = 0; // reinicia o contador de errors
+    let quantityOfCards = this.navParams.get('quantityOfCards');
+    let arrayWithValues = this.deckService.generateCardsValueWithPhotos(quantityOfCards, photos);
+    this.cards = this.deckService.shuffleCards(this.deckService.generateCardsId(arrayWithValues));
   }
 
-  private generateCardsId(arrayWithValuesGenerated: number[]): Card[] {
-    var arrayDeCartas: Card[] = [];
-    arrayWithValuesGenerated.forEach(singleValue => {
-      arrayDeCartas.push(new Card(singleValue));
-    })
-      for (var i = 0; i < arrayDeCartas.length; i++) {
-      arrayDeCartas[i].setId(this.randomizeValue());
-    }    
-    return arrayDeCartas;    
+  restartGame(): void {
+    if (this.navParams.get('photos')) { // se tiver escolhido as fotos
+      this.flagDeckWithPhotos = true;
+      this.buildDeckWithPhotos(this.navParams.get('photos'))
+    } else {
+      this.buildDeckWithoutPhotos();
+    }
   }
 
-  private setPairForEachCard(cardsWithoutPair: Card[]): Card[] {
-    // set pair and shuffle the array with the pairs created: this.baseCards.concat(this.baseCards)
-    return this.shuffleCards(this.baseCards.concat(this.baseCards));   
-  }
-
-  private randomizeValue(): number {
-    return Math.floor((Math.random() * 1000) + 1);
-  }
-
-  private checkIfMatches(firstCard: Card, secondCard: Card): boolean {
-    return (firstCard.getValue() === secondCard.getValue());
-  }
-
-  private displayCardValue(card: Card): void {
-    card.setDisplay(true);
-  }
-
-  private shuffleCards(cardsArray): Card[] {
-    var currentIndex = cardsArray.length, temporaryValue, randomIndex;
-    
-      // While there remain elements to shuffle...
-      while (0 !== currentIndex) {
-    
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-    
-        // And swap it with the current element.
-        temporaryValue = cardsArray[currentIndex];
-        cardsArray[currentIndex] = cardsArray[randomIndex];
-        cardsArray[randomIndex] = temporaryValue;
-      }
-      return cardsArray;
-  }
-
-  private hideCards(): void {
+  hideCards(): void {
     setTimeout(() => {
       this.firstCard.setDisplay(false);
       this.secondCard.setDisplay(false);
     }, 1000);
   }
 
-  private resetPickedCards(): void {
+  resetPickedCards(): void {
     setTimeout(() => {
       this.firstCard = null;
       this.secondCard = null;

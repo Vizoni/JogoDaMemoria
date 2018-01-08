@@ -17,4 +17,27 @@
         </button>  
     </ion-list>
 
+    <hr>
+    <ion-card class="dashed-border-purple">
+      <ion-card-content text-center>
+        <span style="color: #757575; font-size: 20px">Jogue com suas fotos!</span>
+        <button  color="azul-piscina" ion-button block icon-left (click)="getPhotos()">
+          <ion-icon name="camera"></ion-icon>
+          Escolher fotos
+        </button>
+      </ion-card-content>    
+    </ion-card>
+<!-- 
+    <hr>
+    <ion-card class="dashed-border-purple">
+      <ion-card-content text-center>
+        <span *ngIf="photos" >FOTOS:</span>
+        <img [src]="photo" style="width: 60%" *ngFor="let photo of photos">
+      </ion-card-content>    
+    </ion-card> -->
+
+
+
 </ion-content>
+
+  

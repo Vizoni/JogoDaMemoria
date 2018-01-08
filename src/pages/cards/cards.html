@@ -12,12 +12,12 @@
 
 <ion-content padding class="grey-bg">
   
-  <button ion-button block (click)="buildDeck()" class="restart-button">
+  <button ion-button block (click)="restartGame()" class="restart-button">
     <ion-icon name="md-refresh" item-right></ion-icon>
       <span style="margin-left: 10px">Reiniciar</span>
   </button>
 
-  <ion-grid>
+  <ion-grid *ngIf="!flagDeckWithPhotos">
         
     <ion-row *ngIf="cards.length == 12">
       <ion-col col-4 *ngFor="let card of cards" style="padding: 0px !important">
@@ -58,6 +58,31 @@
             <span *ngIf="card.display"> {{ card.value }} </span>
           </ion-card-content>
         </ion-card>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-grid *ngIf="flagDeckWithPhotos">
+        
+    <ion-row >
+    <!-- <ion-row *ngIf="cards.length == 12"> -->
+      <ion-col col-4 *ngFor="let card of cards" style="padding: 0px !important">
+        <ion-card class="cardBordRadius" (click)="pickCard(card)">
+          <ion-card-content class="myCard" *ngIf="!card.display"
+            [ngClass]="{
+              'pickedCard': card.display == true
+            }"
+            style="height: 150px">
+          </ion-card-content>
+          <ion-card-content *ngIf="card.display" style="padding: 0px">
+            <img [src]="card.value" style="width: 90px; margin: 0px; height: 150px" 
+            [ngClass]="{
+              'pickedCard': card.display == true
+            }">
+          </ion-card-content>
+        </ion-card>
+        <!-- <img [src]="card.value" style="width: 60%"> -->
       </ion-col>
     </ion-row>
 
