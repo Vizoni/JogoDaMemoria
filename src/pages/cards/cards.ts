@@ -1,3 +1,4 @@
+import { AlertService } from './../../providers/alert/alert';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
@@ -21,6 +22,7 @@ export class CardsPage {
   flagDeckWithPhotos: boolean = false;
 
   constructor(
+    public alertService: AlertService,
     public deckService: DeckService,
     public navCtrl: NavController,
     public navParams: NavParams
@@ -57,7 +59,7 @@ export class CardsPage {
         } else {  // são pares
           this.resetPickedCards(); // acertou, não esconde as cartas acertadas mas reseta
           if (this.deckService.checkGameEnded(this.cards)) {
-            
+            this.alertService.basicAlert('Fim de jogo!', 'Você acertou todas as cartas! Clique em reiniciar para começar uma nova partida.');
           }
         }
       }
