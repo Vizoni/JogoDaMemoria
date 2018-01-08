@@ -13,6 +13,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 
 import { ImagePicker } from '@ionic-native/image-picker';
+import { DeckService } from '../providers/deck/deck';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { ImagePicker } from '@ionic-native/image-picker';
   providers: [
     Camera,
     CameraService,
+    DeckService,
     File,
     FilePath,
     ImagePicker,
