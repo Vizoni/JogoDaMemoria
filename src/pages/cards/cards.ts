@@ -17,6 +17,7 @@ export class CardsPage {
   firstCard: Card;
   secondCard: Card;
   errorCounter: number = 0;
+  flagDeckWithPhotos: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -27,7 +28,12 @@ export class CardsPage {
   }
 
   ionViewDidLoad() {
-    this.buildDeck();
+    if (this.navParams.get('photos')) { // se tiver escolhido as fotos
+      this.flagDeckWithPhotos = true;
+      this.buildDeckWithPhotos(this.navParams.get('photos'))
+    } else {
+      this.buildDeckWithoutPhotos();
+    }
   }
 
   pickCard(card: Card): void {
@@ -55,11 +61,31 @@ export class CardsPage {
 
   }
 
-  buildDeck(): void {
+  buildDeckWithoutPhotos(): void {
     this.errorCounter = 0; // reinicia o contador de errors
     let quantityOfCards = this.navParams.get('quantityOfCards');  // get quantity of cards user wanna play
     let arrayWithValues = this.generateCardsValue(quantityOfCards); //  generate cards value
     this.cards = this.shuffleCards(this.generateCardsId(arrayWithValues)); // generate cards and shuffle
+  }
+
+  buildDeckWithPhotos(photos: string[]): void {
+    this.errorCounter = 0; // reinicia o contador de errors
+    let quantityOfCards = this.navParams.get('quantityOfCards');
+    let arrayWithValues = this.generateCardsValueWithPhotos(quantityOfCards, photos);
+    this.cards = this.shuffleCards(this.generateCardsId(arrayWithValues));
+  }
+
+  restartGame(): void {
+    if (this.navParams.get('photos')) { // se tiver escolhido as fotos
+      this.flagDeckWithPhotos = true;
+      this.buildDeckWithPhotos(this.navParams.get('photos'))
+    } else {
+      this.buildDeckWithoutPhotos();
+    }
+  }
+
+  private generateCardsValueWithPhotos(quantity: number, photos: string[]): any {
+    return photos.concat(photos);
   }
 
   private generateCardsValue(quantity): number[] {
@@ -70,7 +96,7 @@ export class CardsPage {
     return arrayOfValues.concat(arrayOfValues);    
   }
 
-  private generateCardsId(arrayWithValuesGenerated: number[]): Card[] {
+  private generateCardsId(arrayWithValuesGenerated: any[]): Card[] {
     var arrayDeCartas: Card[] = [];
     arrayWithValuesGenerated.forEach(singleValue => {
       arrayDeCartas.push(new Card(singleValue));

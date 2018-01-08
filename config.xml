@@ -88,4 +88,6 @@
     <plugin name="com.synconset.imagepicker" spec="~2.1.8">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="your usage message" />
     </plugin>
+    <allow-navigation href="http://192.168.137.1:8100" />
+    <allow-navigation href="http://192.168.0.141:8100" />
 </widget>

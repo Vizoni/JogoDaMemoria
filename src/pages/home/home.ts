@@ -15,9 +15,7 @@ export class HomePage {
 
   @Input() cardsQuantity: number[] = [12,20,30];
 
-  photo: Entry;
-
-  fotos: any[];
+  photos: any[];
 
   constructor(
     public navCtrl: NavController,
@@ -38,10 +36,10 @@ export class HomePage {
 
     this.imagePicker.getPictures(options)
     .then((results) => {
-      for (var i = 0; i < results.length; i++) {
-          console.log('Image URI: ' + results);
-      }
-      this.fotos = results;
+      this.navCtrl.push(CardsPage, {
+        quantityOfCards: results.length,
+        photos: results
+      })
     })
     .catch((error: Error) => console.log("imagePicker error:",error.message || error));
   }
